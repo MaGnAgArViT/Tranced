@@ -1,0 +1,206 @@
+#include<iostream.h>
+#include<conio.h>
+#include<graphics.h>
+#include<dos.h>
+
+class layout {
+		int w[8];
+		int A[8];
+		int t;
+		int flag1;
+		public:
+			void turn ();
+			void frame1 ();
+			void crosses (int x , int y);
+			void circles (int x , int y);
+			void game ();
+			void winner();
+			int abscissa (int c);
+			int ordinate (int c);
+			layout()
+			{
+				t=0;
+				flag1=0;
+			}
+			int check (int c , int N);
+	    };
+
+void layout::frame1 ()
+{
+	line(270,70,270,370);
+	line(360,70,360,370);
+	line(180,155,450,155);
+	line(180,285,450,285);
+}
+
+void layout::crosses (int x , int y)
+{
+	line(x-20,y-20,20+x,20+y);
+	line(x-20,20+y,20+x,y-20);
+}
+
+void layout::circles (int x , int y)
+{
+	circle(x,y,20);
+}
+
+void layout::turn ()
+{
+	if(t==0)
+		t=1;
+	else
+		t=0;
+}
+
+int layout::abscissa (int c)
+{
+	int a;
+	switch(c)
+	{
+		case 1: a=225;
+			break;
+		case 2: a=315;
+			break;
+		case 3: a=405;
+			break;
+		case 4: a=225;
+			break;
+		case 5: a=315;
+			break;
+		case 6: a=405;
+			break;
+		case 7: a=225;
+			break;
+		case 8: a=315;
+			break;
+		case 9: a=405;
+			break;
+	}
+	return (a);
+}
+
+int layout::ordinate (int c)
+{
+	int b;
+	switch(c)
+	{
+		case 1: b=125;
+			break;
+		case 2: b=125;
+			break;
+		case 3: b=125;
+			break;
+		case 4: b=233;
+			break;
+		case 5: b=233;
+			break;
+		case 6: b=233;
+			break;
+		case 7: b=328;
+			break;
+		case 8: b=328;
+			break;
+		case 9: b=328;
+			break;
+	}
+	return(b);
+}
+
+int layout::check (int c , int N)
+{
+	int flag=1;
+	for(int I=0 ; I<=N ; I++)
+	{
+		if(A[I]==c)
+		{
+			flag=0;
+			break;
+		}
+	}
+	return(flag);
+}
+
+void layout::winner()
+{
+	int j=0;
+	if(w[j]==w[j+1] && w[j+1]==w[j+2])
+	{
+		line(225,125,405,125);
+		flag1=1;
+	}
+	if(w[j+3]==w[j+4] && w[j+4]==w[j+5])
+	{
+		line(225,233,405,233);
+		flag1=1;
+	}
+	if(w[j+6]==w[j+7] && w[j+7]==w[j+8])
+	{
+		line(225,328,405,328);
+		flag1=1;
+	}
+	if(w[j]==w[j+3] && w[j+3]==w[j+6])
+	{
+		line(225,125,225,328);
+		flag1=1;
+	}
+	if(w[j+1]==w[j+4] && w[j+4]==w[j+7])
+	{
+		line(315,125,315,328);
+		flag1=1;
+	}
+	if(w[j+2]==w[j+5] && w[j+5]==w[j+8])
+	{
+		line(405,125,405,328);
+		flag1=1;
+	}
+	if(w[j+6]==w[j+4] && w[j+4]==w[j+2])
+	{
+		line(225,328,405,125);
+		flag1=1;
+	}
+	if(w[j]==w[j+4] && w[j+4]==w[j+8])
+	{
+		line(225,125,405,328);
+		flag1=1;
+	}
+}
+
+void layout::game ()
+{
+	int c,N=0;
+	int gd=DETECT ,gm;
+	initgraph(&gd , &gm , "C:\\TURBOC3\\BGI");
+	frame1();
+	int i=0;
+	while(i<8 && flag1!=1)
+	{
+		outtextxy(240,390,"ENTER YOUR CHOICE : ");
+		gotoxy(50,25);
+		scanf("%d" , &c);
+		int x,y;
+		x=abscissa(c);
+		y=ordinate(c);
+		if(check(c,N)==1)
+		{
+			if (t==0)
+				crosses(x,y);
+			else
+				circles(x,y);
+			N=i;
+			A[i]=c;
+			w[c-1]=t;
+			if(c<=9 && c>0)
+				i++;
+			winner();
+			turn();
+		}
+	}
+	delay(1500);
+	closegraph();
+}
+
+void main ()
+{
+	layout l;
+	l.game();
+}
